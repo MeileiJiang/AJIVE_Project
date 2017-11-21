@@ -20,6 +20,7 @@ function AJIVEtest(itest)
 
 
 load('Dataexample/ToyData.mat')
+addpath 'AJIVECode/'
 
 
 if itest == 1 
