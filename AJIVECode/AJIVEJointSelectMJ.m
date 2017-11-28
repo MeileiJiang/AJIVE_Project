@@ -68,7 +68,7 @@ if rjoint >= min(vecr)
 end
 
 row_joint = v_union(1:rjoint, :);
-disp(['Proposed Joint rank:' num2str(rjoint)]);
+disp(['Proposed Joint rank: ' num2str(rjoint)]);
 
 % visulize the joint rank selection 
 if iplot == 1
