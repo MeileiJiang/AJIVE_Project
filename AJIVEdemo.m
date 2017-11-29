@@ -2,7 +2,7 @@
 clear
 clc
 % Toy data example 
-load('Dataexample/ToyData.mat');
+load('DataExample/toydata.mat');
 addpath 'AJIVECode/'
 % orgainze data matrices into cell struct
 datablock{1} = X;
@@ -20,14 +20,23 @@ AJIVEPreVisualMJ(datablock, rank);
 
 % select rank as vecr = [2, 3]
 vecr = [2, 3];
-outstruct = AJIVEMainMJ(datablock, vecr);
-
+dataname = {'X', 'Y'};
+paramstruct0 = struct('dataname', {dataname}, ...
+                      'iplot', [0 0]);
+tic
+outstruct0 = AJIVEMainMJ(datablock, vecr, paramstruct0);
+toc
 % output matrices
-paramstruct = struct('ioutput', [1, 1, 1, 1, 1, 1, 1, 1, 1]);
+paramstruct = struct('ioutput', [1, 1, 1, 1, 1, 1, 1, 1, 1], ...
+                     'dataname', {dataname}, ...
+                     'iplot', [1 1]);
 vecr = [2, 3];
 outstruct = AJIVEMainMJ(datablock, vecr, paramstruct);
-
-% visualize matrices
+% visualize outputs
 Xjoint = outstruct.MatrixJoint{1};
 Xindiv = outstruct.MatrixIndiv{1};
 AJIVEdecompVisualMJ(Xjoint, Xindiv)
+
+Yjoint = outstruct.MatrixJoint{2};
+Yindiv = outstruct.MatrixIndiv{2};
+AJIVEdecompVisualMJ(Yjoint, Yindiv);

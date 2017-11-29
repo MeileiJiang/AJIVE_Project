@@ -21,7 +21,7 @@ function AJIVEtest(itest, data_dir, func_path)
 
 
     if ~exist('data_dir', 'var')
-        data_dir = 'DataExample/ToyData.mat';
+        data_dir = 'DataExample/toydata.mat';
     end
 
     if ~exist('func_path', 'var')
@@ -50,13 +50,14 @@ function AJIVEtest(itest, data_dir, func_path)
     elseif itest == 2 
 
       disp('Test Main Program, small ranks input, 2 & 1') ;
-      outstruct = AJIVEMainMJ({X,Y},[2 1]) 
+      outstruct = AJIVEMainMJ({X,Y},[2 1]);
+      disp(outstruct)
 
     elseif itest == 3 
 
       disp('Test Main Program, small ranks input, 1 & 2') ;
       paramstruct = struct('ioutput',[0 0 0 0 0 0 1 1 0]) ;
-      outstruct = AJIVEMainMJ({X,Y},[1; 2],paramstruct)
+      outstruct = AJIVEMainMJ({X,Y},[1; 2],paramstruct);
       Xj = outstruct.MatrixJoint{1} ;
       Xi = outstruct.MatrixIndiv{1} ;
       Yj = outstruct.MatrixJoint{2} ;
@@ -68,7 +69,7 @@ function AJIVEtest(itest, data_dir, func_path)
 
       disp('Test Main Program, small ranks input, 2 & 2') ;
       paramstruct = struct('ioutput',[0 0 0 0 0 0 1 1 0]) ;
-      outstruct = AJIVEMainMJ({X,Y},[2; 2],paramstruct)
+      outstruct = AJIVEMainMJ({X,Y},[2; 2],paramstruct);
       Xj = outstruct.MatrixJoint{1} ;
       Xi = outstruct.MatrixIndiv{1} ;
       Yj = outstruct.MatrixJoint{2} ;
@@ -80,7 +81,7 @@ function AJIVEtest(itest, data_dir, func_path)
 
       disp('Test Main Program, good ranks input, 2 & 3') ;
       paramstruct = struct('ioutput',[0 0 0 0 0 0 1 1 0]) ;
-      outstruct = AJIVEMainMJ({X,Y},[2; 3],paramstruct)
+      outstruct = AJIVEMainMJ({X,Y},[2; 3],paramstruct);
       Xj = outstruct.MatrixJoint{1} ;
       Xi = outstruct.MatrixIndiv{1} ;
       Yj = outstruct.MatrixJoint{2} ;
@@ -92,7 +93,7 @@ function AJIVEtest(itest, data_dir, func_path)
 
       disp('Test Main Program, ranks input, 3 & 3') ;
       paramstruct = struct('ioutput',[0 0 0 0 0 0 1 1 0]) ;
-      outstruct = AJIVEMainMJ({X,Y},[3; 3],paramstruct)
+      outstruct = AJIVEMainMJ({X,Y},[3; 3],paramstruct);
       Xj = outstruct.MatrixJoint{1} ;
       Xi = outstruct.MatrixIndiv{1} ;
       Yj = outstruct.MatrixJoint{2} ;
@@ -104,7 +105,7 @@ function AJIVEtest(itest, data_dir, func_path)
 
       disp('Test Main Program, big ranks input, 4 & 5') ;
       paramstruct = struct('ioutput',[0 0 0 0 0 0 1 1 0]) ;
-      outstruct = AJIVEMainMJ({X,Y},[4; 5],paramstruct)
+      outstruct = AJIVEMainMJ({X,Y},[4; 5],paramstruct);
       Xj = outstruct.MatrixJoint{1} ;
       Xi = outstruct.MatrixIndiv{1} ;
       Yj = outstruct.MatrixJoint{2} ;
@@ -116,7 +117,7 @@ function AJIVEtest(itest, data_dir, func_path)
 
       disp('Test Main Program, big ranks input, 10 & 5') ;
       paramstruct = struct('ioutput',[0 0 0 0 0 0 1 1 0]) ;
-      outstruct = AJIVEMainMJ({X,Y},[10; 5],paramstruct)
+      outstruct = AJIVEMainMJ({X,Y},[10; 5],paramstruct);
       Xj = outstruct.MatrixJoint{1} ;
       Xi = outstruct.MatrixIndiv{1} ;
       Yj = outstruct.MatrixJoint{2} ;
@@ -128,7 +129,7 @@ function AJIVEtest(itest, data_dir, func_path)
 
       disp('Test Main Program, big ranks input, 20 & 30') ;
       paramstruct = struct('ioutput',[0 0 0 0 0 0 1 1 0]) ;
-      outstruct = AJIVEMainMJ({X,Y},[20; 30],paramstruct)
+      outstruct = AJIVEMainMJ({X,Y},[20; 30],paramstruct);
       Xj = outstruct.MatrixJoint{1} ;
       Xi = outstruct.MatrixIndiv{1} ;
       Yj = outstruct.MatrixJoint{2} ;
@@ -152,7 +153,7 @@ function AJIVEtest(itest, data_dir, func_path)
 
       disp('Test Main Program, mean subtraction 2 3') ;
       paramstruct = struct('imean',[2 3]) ;
-      JIVEMainMJ({X,Y},[2; 3],paramstruct)
+      AJIVEMainMJ({X,Y},[2; 3],paramstruct)
 
     elseif itest == 13 
 
@@ -170,30 +171,29 @@ function AJIVEtest(itest, data_dir, func_path)
 
       disp('Test Main Program, iplot 1 1') ;
       paramstruct = struct('iplot',[1 1]) ;
-      AJIVEMainMJ({X,Y},[3; 5],paramstruct)
+      AJIVEMainMJ({X,Y},[2; 3],paramstruct)
 
     elseif itest == 16 
 
-      disp('Test Main Program, iplot 0 1, boundp = 65 85') ;
-      paramstruct = struct('iplot',[0 1], ...
-                           'boundp',[65 85]) ;
-      AJIVEMainMJ({X,Y},[3; 5],paramstruct)
+      disp('Test Main Program, iplot 1 0, iprint = 1 0') ;
+      paramstruct = struct('iplot',[1 0], ...
+                           'iprint',[1 0]) ;
+      AJIVEMainMJ({X,Y},[2; 3],paramstruct)
 
     elseif itest == 17 
 
-      disp('Test Main Program, iplot 0 1, boundp = 20, threp = 20') ;
+      disp('Test Main Program, iplot 0 1, iprint = 0 1, threp = 20') ;
       paramstruct = struct('iplot',[0 1], ...
-                           'boundp',20, ...
+                           'iprint',[0 1], ...
                            'threp',20) ;
-      AJIVEMainMJ({X,Y},[3; 5],paramstruct)
+      AJIVEMainMJ({X,Y},[2; 3],paramstruct)
 
-    elseif itest == 18 ;
+    elseif itest == 18 
 
-      disp('Test Main Program, iplot 0 1, boundp = 20, threp = 80') ;
+      disp('Test Main Program, iplot 0 1, threp = 80') ;
       paramstruct = struct('iplot',[0 1], ...
-                           'boundp',20, ...
                            'threp',80) ;
-      AJIVEMainMJ({X,Y},[3; 5],paramstruct)
+      AJIVEMainMJ({X,Y},[2; 3],paramstruct)
 
     elseif itest == 19 
 
@@ -201,7 +201,7 @@ function AJIVEtest(itest, data_dir, func_path)
       paramstruct = struct('iplot',[1 1], ...
                            'dataname', ...
                            {{'Name X' 'Name Y'}}) ;
-      AJIVEMainMJ({X,Y},[3; 5],paramstruct)
+      AJIVEMainMJ({X,Y},[2; 3],paramstruct)
 
     elseif itest == 101 
 

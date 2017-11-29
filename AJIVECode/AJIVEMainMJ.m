@@ -40,8 +40,8 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
 %                      mean of the matrix
 %
 %    iplot             a vector indicating whether to generate figures for
-%                      visualizing JIVE step 1 and step 2; 
-%                      default is [0 0];
+%                      visualizing AJIVE step 1 and step 2; 
+%                      default is [0 1];
 %
 %    numcompshow       number of singular values to be ploted in the scree
 %                      plot; default value is 100;
@@ -50,10 +50,17 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
 %                      name is {'datablock1', ..., 'datablockk'}
 %    nresample         number of re-samples in the AJIVE step 2 for
 %                      estimating the perturbation bounds; default value is 1000;
-%    boundp            Additional percentiles of interest in perturbation bounds; 
-%                      default is []; [50 5 95] percentiles are always given; 
 %    threp             Percentile of perturbation bounds used for deciding
-%                      the joint rank; default is 50 i.e. median.  
+%                      the joint rank; default is 5. 
+%    iprint            a vector indicating whether to save figures for
+%                      visualizing AJIVE step 1 and step 2;
+%                      default is [0 0];
+%    figname2_1         a string: name of the SSV diagnostic plot in step 2
+%    figname2_2         a string: name of the principal angle diagnostic
+%                      plot in step 2
+%    figdir            a directory to save figure.
+%    ferror            a small number add to singular value to avoid float 
+%                      error. The default value is 10^(-10).    
 %    ioutput           0-1 indicator vector of output's structure 
 %                      [CNS,  
 %                       CNSloading, 
@@ -73,122 +80,144 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
 %    
 % Outputs: 
 %   outstruct
-%   row_joint_origin
 % 
 
 
 
 % Assumes path can find personal functions:
-%    JIVEJointSelectMJ.m
-%    JIVEReconstructMJ.m
+%    AJIVEPreVisualMJ.m
+%    AJIVEInitExtrctMJ.m
+%    AJIVEJointSelectMJ.m
+%    AJIVEReconstructMJ.m
 %    JIVErandnullQF.m
-%    JIVEPreVisualMJ.m
+%    DiagPlotSSVMJ.m
+%    DiagPlotAngleMJ.m
+%    SVDBoundWedinMJ.m
+%    randorth.m
+%    num2order.m
+%    axisSM.m
 
 %    Copyright (c)  Meilei Jiang, Qing Feng, Jan Hannig & J. S. Marron 2017
 
 
-k = length(datablock);
-% check common number of samples
-d = [];
-n = size(datablock{1}, 2);
-for ib = 1:k
-    d(k) = size(datablock{ib}, 1);
-    if size(datablock{ib}, 2) ~= n
-        disp('Error Message: AJIVE terminated due to no common number of samples!')
+    nb = length(datablock); % number of blocks
+    % check common number of samples
+    d = zeros(1, nb);
+    n = size(datablock{1}, 2);
+    for ib = 1:nb
+        d(nb) = size(datablock{ib}, 1);
+        if size(datablock{ib}, 2) ~= n
+            disp('Error Message: AJIVE terminated due to no common number of samples!')
+            return;
+        end
+    end
+
+    if nargin == 1
+        disp('Error Message: AJIVE terminated due to no given rank estimates!')
         return;
     end
-end
 
-if nargin == 1
-    disp('Error Message: AJIVE terminated due to no given rank estimates!')
-    return
-end
+    % defaul value of parameters in paramstruct
+    imean = zeros(1, nb);
+    iplot = [0 1];
+    numcompshow = 100;
+    threp = 5;
+    nresample = 1000;
+    dataname = cell(1, nb);
+    for ib = 1:nb
+        dataname{ib} = ['datablock' num2str(ib)];
+    end
+    iprint = [0 0];
+    figname2_1 = '';
+    figname2_2 = '';
+    figdir = '';
+    ferror = 10^(-10);
+    ioutput = [1, 1, 0, 0, 1, 1, 0, 0, 0];
 
-% initialize
-imean = zeros(1, k);
-iplot = [0 0];
-numcompshow = 100;
-boundp = [];
-threp = 50;
-nresample = 1000;
-dataname = cell(1, k);
-for ib = 1:k
-    dataname{ib} = ['datablock' num2str(ib)];
-end
-ioutput = [1, 1, 0, 0, 1, 1, 0, 0, 0];
+    % If paramstruct has been added, then change to input value
+    if exist('paramstruct', 'var')   
 
+      if isfield(paramstruct,'imean')     
+        imean = paramstruct.imean; 
+      end 
 
-if nargin > 2    %  then paramstruct has been added
-  
-  if isfield(paramstruct,'imean')     %  then change to input value
-    imean = getfield(paramstruct,'imean') ; 
-  end 
+      if isfield(paramstruct,'iplot')    
+        iplot = paramstruct.iplot; 
+      end 
 
-  if isfield(paramstruct,'iplot')    %  then change to input value
-    iplot = getfield(paramstruct,'iplot') ; 
-  end 
-  
-  if isfield(paramstruct,'numcompshow')    %  then change to input value
-    numcompshow = getfield(paramstruct,'numcompshow') ; 
-  end 
-  
-  if isfield(paramstruct,'dataname')     %  then change to input value
-    dataname = getfield(paramstruct,'dataname') ; 
-  end 
+      if isfield(paramstruct,'numcompshow')    
+        numcompshow = paramstruct.numcompshow; 
+      end 
 
-  if isfield(paramstruct,'boundp')     %  then change to input value
-    boundp = getfield(paramstruct,'boundp') ; 
-  end 
-  
-  if isfield(paramstruct,'threp')    %  then change to input value
-    threp = getfield(paramstruct,'threp') ; 
-  end 
-  
-  if isfield(paramstruct,'nresample')    %  then change to input value
-    nresample = getfield(paramstruct,'nresample') ; 
-  end 
-  
-  if isfield(paramstruct,'ioutput')    %  then change to input value
-    ioutput = getfield(paramstruct,'ioutput') ; 
-  end 
-  
-end
+      if isfield(paramstruct,'dataname')     
+        dataname = paramstruct.dataname; 
+      end 
 
-% mean center 
-for ib = 1:k
-    
-    if imean(ib) == 1 % center by row 
-        datablock{ib} = bsxfun(@minus,datablock{ib},mean(datablock{ib}')');
-    elseif imean(ib) == 2 % center by column
-        datablock{ib} = bsxfun(@minus,datablock{ib},mean(datablock{ib}));
-    elseif imean(ib) == 3 % center by overmean
-        datablock{ib} = bsxfun(@minus,datablock{ib},mean(datablock{ib}(:)));
+      if isfield(paramstruct,'threp')    
+        threp = paramstruct.threp; 
+      end 
+
+      if isfield(paramstruct,'nresample')   
+        nresample = paramstruct.nresample; 
+      end 
+      
+      if isfield(paramstruct,'iprint')   
+        iprint = paramstruct.iprint; 
+      end 
+      
+      if isfield(paramstruct,'figname2_1')
+        figname2_1 = paramstruct.figname2_1; 
+      end
+      
+      if isfield(paramstruct,'figname2_2')
+        figname2_2 = paramstruct.figname2_2; 
+      end
+      
+      if isfield(paramstruct,'ferror')
+        ferror = paramstruct.ferror; 
+      end
+      
+      if isfield(paramstruct,'ioutput')
+        ioutput = paramstruct.ioutput; 
+      end 
+
     end
 
-end
+    % mean center 
+    for ib = 1:nb
 
-% visualize selected ranks for each data block
-if iplot(1) == 1
-    for ib = 1:k
-        rankv{ib} = vecr(ib); 
+        if imean(ib) == 1 % center by row 
+            datablock{ib} = bsxfun(@minus,datablock{ib},mean(datablock{ib}')');
+        elseif imean(ib) == 2 % center by column
+            datablock{ib} = bsxfun(@minus,datablock{ib},mean(datablock{ib}));
+        elseif imean(ib) == 3 % center by overmean
+            datablock{ib} = bsxfun(@minus,datablock{ib},mean(datablock{ib}(:)));
+        end
+
     end
-    AJIVEPreVisualMJ(datablock, rankv, numcompshow, dataname);
+
+    % visualize selected ranks for each data block
+
+    if iplot(1) == 1
+        rankv = cell(1, nb);
+        for ib = 1:nb
+            rankv{ib} = vecr(ib); 
+        end
+        AJIVEPreVisualMJ(datablock, rankv, numcompshow, dataname, iprint(1), figdir);
+    end
+
+    % Step 1: Signal Space Initial Extraction 
+    fprintf('Signal Space Initial Extraction ... \n')
+    [M, angleBound, threshold] = AJIVEInitExtractMJ(datablock, vecr, nresample, dataname);
+
+    % Step 2: Joint Score Space Estimation
+    disp('Score Space Segmentation ...')
+    row_joint_origin = AJIVEJointSelectMJ(M, angleBound, vecr, threp, dataname, ...
+        iplot(2), iprint(2), {figname2_1, figname2_2}, figdir, ferror);
+
+    % Step 3: Final Decomposition And Outputs 
+    fprintf('Reconstruction of each type of signal ... \n')
+    outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_joint_origin, ioutput);
 end
-
-fprintf('Signal Space Initial Extraction ... \n')
-threshold = [];
-
-for ib = 1:k
-    s = svd(datablock{ib});
-    threshold(ib) = (s(vecr(ib))+s(vecr(ib)+1))/2; % threshold of singular values
-end
-
-% joint row space estimation
-fprintf('Score Space Segmentation ... \n')
-row_joint_origin = AJIVEJointSelectMJ(datablock, vecr, dataname, boundp, threp, nresample, iplot(2));
-
-% reconstruction of each type of signal 
-fprintf('Reconstruction of each type of signal ... \n')
-outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_joint_origin, ioutput);
 
 

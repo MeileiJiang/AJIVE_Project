@@ -14,8 +14,9 @@ paramstruct = struct('iplot', iplot, ...
 vecr = [20 16 15 27];
 
 %% Run AJIVE
+tic
 outstruct = AJIVEMainMJ(datablock, vecr, paramstruct);
-
+toc
 %% score analysis: GE - CN - Rppa - Mut
 subtypeKey = {'LumA', 'LumB', 'Her2', 'Basal'};
 markerValue = {'+', 'x', '*', '<'};

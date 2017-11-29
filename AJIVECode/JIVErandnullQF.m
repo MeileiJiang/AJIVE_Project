@@ -32,7 +32,7 @@ parfor isim = 1:nsim
     
         Usim = [Usim tmp];
     
-    end;
+    end
     
     nulldir=orth(nulldir);
     
