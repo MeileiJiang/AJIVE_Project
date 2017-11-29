@@ -77,7 +77,7 @@ function DiagPlotSSVMJ(dataname, vecr, randSSVs, s_M, WedinSSVbds, ...
             figdir = '';
         end
               
-        if ~exist('filename', 'var') || isempty(figname)
+        if ~exist('figname', 'var') || isempty(figname)
             figname = 'DiagnosticPlot_SSV';
             for i = 1:length(vecr)
                 figname = strcat(figname, '_', dataname{i}, '_', num2str(vecr(i)));
