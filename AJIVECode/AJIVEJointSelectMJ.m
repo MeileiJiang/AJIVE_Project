@@ -62,9 +62,9 @@ function row_joint = AJIVEJointSelectMJ(M, angleBound, vecr, threp, dataname, ..
             [1 nb], iprint, figdir, figname{1});
         % make principal angle diagnostic plot in the two block case
         if nb == 2
-            WedinAnglebds = acosd(WedinSSVbds - 1);
-            randAngles = acosd(randSSVs - 1);
-            pangles = acosd(s_M.^2 - 1);
+            WedinAnglebds = acosd(min(WedinSSVbds - 1, 1));
+            randAngles = acosd(min(randSSVs - 1, 1));
+            pangles = acosd(min(s_M.^2 - 1, 1));
             DiagPlotAngleMJ(dataname, vecr, randAngles, pangles, WedinAnglebds, ...
                 10,  iprint, figdir, figname{2})
         end
