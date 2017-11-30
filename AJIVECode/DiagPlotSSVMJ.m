@@ -78,7 +78,7 @@ function DiagPlotSSVMJ(dataname, vecr, randSSVs, s_M, WedinSSVbds, ...
         end
               
         if ~exist('figname', 'var') || isempty(figname)
-            figname = 'DiagnosticPlot_SSV';
+            figname = 'DiagPlot_SSV';
             for i = 1:length(vecr)
                 figname = strcat(figname, '_', dataname{i}, '_', num2str(vecr(i)));
             end
@@ -87,7 +87,7 @@ function DiagPlotSSVMJ(dataname, vecr, randSSVs, s_M, WedinSSVbds, ...
         savestr = strcat(figdir, figname);        
         try
             orient landscape
-            print(fig, '-deps', savestr)
+            print(fig, '-depsc', savestr)
             disp('Save squared singular value diagnostic plot successfully!')
         catch
             disp('Fail to save squared singular value diagnostic plot!')

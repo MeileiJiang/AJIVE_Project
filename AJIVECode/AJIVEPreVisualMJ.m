@@ -153,7 +153,7 @@ for ib = 1:nb
         savestr1_2 = strcat(figdir, figname1_2);        
         try
             orient landscape
-            print(fig2, '-deps', savestr1_2)
+            print(fig2, '-depsc', savestr1_2)
             disp('Save log scree plot successfully!')
         catch
             disp('Fail to save log scree plot!')

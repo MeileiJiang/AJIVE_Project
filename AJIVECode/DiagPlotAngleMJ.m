@@ -71,7 +71,7 @@ function DiagPlotAngleMJ(dataname, vecr, randAngles, pangles, WedinAnglebds, ...
         end
         
         if ~exist('figname', 'var') || isempty(figname)
-            figname = 'PrincipalAngle';
+            figname = 'DiagPlot_Angle';
             for i = 1:length(vecr)
                 figname = strcat(figname, '_', dataname{i}, '_', num2str(vecr(i)));
             end
@@ -80,7 +80,7 @@ function DiagPlotAngleMJ(dataname, vecr, randAngles, pangles, WedinAnglebds, ...
         savestr = strcat(figdir, figname);        
         try
             orient landscape
-            print(fig, '-deps', savestr)
+            print(fig, '-depsc', savestr)
             disp('Save principal angle diagnostic plot successfully!')
         catch
             disp('Fail to save principal angle diagnostic plot!')
