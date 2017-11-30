@@ -165,6 +165,10 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
         iprint = paramstruct.iprint; 
       end 
       
+      if isfield(paramstruct, 'figdir')
+          figdir = paramstruct.figdir;
+      end
+      
       if isfield(paramstruct,'figname2_1')
         figname2_1 = paramstruct.figname2_1; 
       end
