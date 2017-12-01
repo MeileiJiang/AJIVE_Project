@@ -1,5 +1,5 @@
 function DiagPlotSSVMJ(dataname, vecr, randSSVs, s_M, WedinSSVbds, ...
-    n_sv, xlimits, iprint, figdir, figname, true_WedinSSVbd)
+    n_sv, xlimits, iprint, figdir, figname, ssv_hard_cut, true_WedinSSVbd)
 % DiagPlotSSVMJ Make squared singular value diagnostic plot. The values of
 % square singular values of M are shown as solid vertical black 
 % line segments. The values of the c.d.f. of the resampled Wedin bound 
@@ -9,7 +9,7 @@ function DiagPlotSSVMJ(dataname, vecr, randSSVs, s_M, WedinSSVbds, ...
 % as a red dashed line. If the red dashed line is larger than the blue
 % dashed line, i.e., the Wedin bound is more loose than the random directon
 % bound, we suggests to use random direction bound or reduce the initial
-% ranks.
+% ranks. The cyan vertical dashed line shows the pre-specified joint rank cutoff.
 % Inputs:
 %   dataname        - cell of strings. Names of each datablock
 %   randSSVs        - array of largest singular values of each union matrix under 
@@ -21,8 +21,9 @@ function DiagPlotSSVMJ(dataname, vecr, randSSVs, s_M, WedinSSVbds, ...
 %   iprint          - 0: not generate figure in the figdir
 %                   - 1: generate figure in the figdir
 %   figdir          - diretory to save figure
-%   figname        - a string: figure file name
+%   figname         - a string: figure file name
 %   xlimit          - a vector [l u] specifying the limits of x axis
+%   ssv_hard_cut    - a threshold to give the pre-specified joint rank. Default is -1. 
 %   true_WedinSSVbd - theoretical value of the Wedin bound
 % Outputs:
 %   Graphics only. No value returns.
@@ -58,6 +59,10 @@ function DiagPlotSSVMJ(dataname, vecr, randSSVs, s_M, WedinSSVbds, ...
         end
         line([true_WedinSSVbd true_WedinSSVbd], [0 1], ...
      'color', 'b')
+    end
+    if exist('ssv_hard_cut', 'var') && ssv_hard_cut >= 0
+        line([ssv_hard_cut ssv_hard_cut], [0 1], 'color', 'c', ...
+            'LineStyle', '--', 'LineWidth', 2)
     end
     for i = 1:min(length(s_M), n_sv)
         line([s_M(i)^2 s_M(i)^2], [0.25 0.75], ...

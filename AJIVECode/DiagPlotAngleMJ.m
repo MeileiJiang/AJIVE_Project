@@ -1,5 +1,5 @@
 function DiagPlotAngleMJ(dataname, vecr, randAngles, pangles, WedinAnglebds, ...
-    n_sv,  iprint,figdir, figname,  true_WedinAnglebd)
+    n_sv,  iprint,figdir, figname, angle_hard_cut, true_WedinAnglebd)
 % DiagPlotAngleMJ Make principal angle diagnostic plot. The values of
 % principal angles between the two datablock are shown as solid vertical black 
 % line segments. The values of survival function of the resampled Wedin
@@ -53,6 +53,10 @@ function DiagPlotAngleMJ(dataname, vecr, randAngles, pangles, WedinAnglebds, ...
     if exist('true_WedinAnglebd', 'var')
         line([true_WedinAnglebd true_WedinAnglebd], [0 1], ...
      'color', 'b', 'LineWidth', 2)
+    end
+    if exist('angle_hard_cut', 'var') && angle_hard_cut >= 0
+        line([angle_hard_cut angle_hard_cut], [0 1], 'color', 'c', ...
+            'LineStyle', '--', 'LineWidth', 2)
     end
     for i = 1:min(length(pangles), n_sv)
         line([pangles(i) pangles(i)], [0.25 0.75], ...

@@ -4,7 +4,7 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
 %     Note: careful use of 'ioutput' is needed
 %
 % Inputs:
-%   datablock        - cells of data matrices {datablock 1, ..., datablock k}
+%   datablock        - cells of data matrices {datablock 1, ..., datablock nb}
 %                    - Each data matrix is a d x n matrix that each row is
 %                    a feature and each column is a data object 
 %                    - Matrices are required to have same number of objects
@@ -33,7 +33,7 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
 %                                         '',) ;
 %
 %    fields            values
-%    imean             a 1xk vector indicating centering for each data
+%    imean             a 1 x nb vector indicating centering for each data
 %                      block e.g. [0 0 0 0] for a datablock cell containing 4 matrices 
 %                      0: no centering (default), 1: centering by row  
 %                      2: centering by column, 3: centering by the overall
@@ -46,18 +46,32 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
 %    numcompshow       number of singular values to be ploted in the scree
 %                      plot; default value is 100;
 %
+%    rj               manually input the joint rank. Default is -1, which indicates no joint rank input. 
+%
+%    ierror0           a 1 x nb binary vector indicating whether setting 0
+%                      perturbation angle for each datablock. 
+%                      0: error existing in the data block and estimating perturbation angle
+%                      1: no error in the data block and using zero perturbation angle
+%                      The default is a 1 x nb zero vector.
+%
 %    dataname          a cellarray of strings: name of each data block; default
-%                      name is {'datablock1', ..., 'datablockk'}
+%                      name is {'datablock1', ..., 'datablocknb'}
+%    
 %    nresample         number of re-samples in the AJIVE step 2 for
 %                      estimating the perturbation bounds; default value is 1000;
+%
 %    threp             Percentile of perturbation bounds used for deciding
 %                      the joint rank; default is 5. 
+%
 %    iprint            a vector indicating whether to save figures for
 %                      visualizing AJIVE step 1 and step 2;
 %                      default is [0 0];
-%    figname2_1         a string: name of the SSV diagnostic plot in step 2
-%    figname2_2         a string: name of the principal angle diagnostic
+%
+%    figname2_1        a string: name of the SSV diagnostic plot in step 2
+%
+%    figname2_2        a string: name of the principal angle diagnostic
 %                      plot in step 2
+%
 %    figdir            a directory to save figure.
 %    ferror            a small number add to singular value to avoid float 
 %                      error. The default value is 10^(-10).    
@@ -102,15 +116,7 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
 
     nb = length(datablock); % number of blocks
     % check common number of samples
-    d = zeros(1, nb);
-    n = size(datablock{1}, 2);
-    for ib = 1:nb
-        d(nb) = size(datablock{ib}, 1);
-        if size(datablock{ib}, 2) ~= n
-            disp('Error Message: AJIVE terminated due to no common number of samples!')
-            return;
-        end
-    end
+    
 
     if nargin == 1
         disp('Error Message: AJIVE terminated due to no given rank estimates!')
@@ -121,6 +127,7 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
     imean = zeros(1, nb);
     iplot = [0 1];
     numcompshow = 100;
+    ierror0 = zeros(1, nb);
     threp = 5;
     nresample = 1000;
     dataname = cell(1, nb);
@@ -133,6 +140,7 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
     figdir = '';
     ferror = 10^(-10);
     ioutput = [1, 1, 0, 0, 1, 1, 0, 0, 0];
+    rj = -1;
 
     % If paramstruct has been added, then change to input value
     if exist('paramstruct', 'var')   
@@ -145,6 +153,14 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
         iplot = paramstruct.iplot; 
       end 
 
+      if isfield(paramstruct,'ierror0')    
+        ierror0 = paramstruct.ierror0; 
+      end 
+
+      if isfield(paramstruct,'rj')    
+        rj = paramstruct.rj; 
+      end 
+      
       if isfield(paramstruct,'numcompshow')    
         numcompshow = paramstruct.numcompshow; 
       end 
@@ -186,6 +202,23 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
       end 
 
     end
+    
+    % check dimension restriction condition
+    n = size(datablock{1}, 2);
+    for ib = 1:nb
+        if size(datablock{ib}, 2) ~= n
+            disp('Error Message: AJIVE terminated due to no common number of samples!')
+            return;
+        end
+        if n < 2*vecr(ib) && ierror0(ib) == 0 
+            disp(['Error Message: sample size (column number) is too small to estimate the SVD perturbation angle in ', dataname{ib}])
+            return;
+        end
+        if size(datablock{ib}, 1) < 2*vecr(ib) && ierror0(ib) == 0 
+            disp(['Error Message: feasure size (row number) is too small to estimate the SVD perturbation angle in ', dataname{ib}])
+            return;
+        end
+    end
 
     % mean center 
     for ib = 1:nb
@@ -212,11 +245,12 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
 
     % Step 1: Signal Space Initial Extraction 
     fprintf('Signal Space Initial Extraction ... \n')
-    [M, angleBound, threshold] = AJIVEInitExtractMJ(datablock, vecr, nresample, dataname);
+    [M, angleBound, threshold] = AJIVEInitExtractMJ(datablock, vecr, nresample, dataname, ierror0);
+
 
     % Step 2: Joint Score Space Estimation
-    disp('Score Space Segmentation ...')
-    row_joint_origin = AJIVEJointSelectMJ(M, angleBound, vecr, threp, dataname, ...
+    fprintf('Score Space Segmentation ... \n')
+    row_joint_origin = AJIVEJointSelectMJ(M, angleBound, vecr, threp, rj, dataname, ...
         iplot(2), iprint(2), {figname2_1, figname2_2}, figdir, ferror);
 
     % Step 3: Final Decomposition And Outputs 

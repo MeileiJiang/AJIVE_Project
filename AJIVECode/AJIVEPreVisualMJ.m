@@ -72,7 +72,7 @@ for ib = 1:nb
     end
     subplot(1, 2, 2);
     plot(diff(s(1:shows)),'marker','o', 'linewidth', 1, 'color','blue');
-    xlabel('Component Index');
+    xlabel('Difference Index');
     ylabel('Difference between Adjacent Singluar Value');
     hold on;
     for ir = 1:length(rt)
@@ -127,7 +127,7 @@ for ib = 1:nb
 
     subplot(1, 2, 2)
     plot(diff(log10(s(1:shows))),'marker','o', 'linewidth', 1, 'color','blue');
-    xlabel('Component Index');
+    xlabel('Difference Index');
     ylabel('Difference between Adjacent Log_{10}(Singluar Value)');
     hold on;
     for ir = 1:length(rt)
