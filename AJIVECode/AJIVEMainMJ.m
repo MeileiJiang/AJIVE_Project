@@ -255,7 +255,7 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
 
     % Step 3: Final Decomposition And Outputs 
     fprintf('Reconstruction of each type of signal ... \n')
-    outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_joint_origin, ioutput);
+    outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_joint_origin, ioutput, ferror);
 end
 
 

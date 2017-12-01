@@ -1,4 +1,4 @@
-function outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_joint, ioutput)
+function outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_joint, ioutput, ferror)
 %  function for AJIVE Matrix re-construction
 % Inputs:
 %   datablock        - cells of data matrices {datablock 1, ..., datablock nb}
@@ -7,7 +7,7 @@ function outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_join
 %                    - name is {'datablock1', ..., 'datablocknb'}
 %   row_joint        - orthonormal basis of estimated joint row space 
 %                      output of 'AJIVEJointSelectMJ.m'
-%    ioutput         - 0-1 indicator vector of output's structure 
+%   ioutput          - 0-1 indicator vector of output's structure 
 %                      [CNS,  
 %                       CNSloading, 
 %                       BSSjoint,
@@ -18,10 +18,16 @@ function outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_join
 %                       MatrixIndiv, 
 %                       MatrixResid
 %                       ] 
+%    ferror            a small number add to singular value to avoid float 
+%                      error. The default value is 10^(-10).    
+%
 % Outputs:
 %   outstruct        - a structure contains all elements in ioutput
 %
 %    Copyright (c) Meilei Jiang, Qing Feng, Jan Hannig & J. S. Marron 2017
+    if ~exist('ferror', 'var')
+        ferror = 10^-10;
+    end
 
     nb = length(datablock);
     n = size(datablock{1}, 2);
@@ -32,7 +38,7 @@ function outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_join
     for ib = 1:nb
         JointDirection = datablock{ib} * row_joint';
         % Rows in the joint space basis have sd lower than threshold.
-        LowSdJointRow = find(sqrt(sum(JointDirection.^2, 1)) <= threshold(ib));    
+        LowSdJointRow = find(sqrt(sum(JointDirection.^2, 1)) <= threshold(ib)) + ferror;    
         if size(LowSdJointRow) > 0
             if size(LowSdJointRow) == 1
                 disp(['Note: The ' num2order(LowSdJointRow) ' joint space basis vector has low variance in ' dataname{ib} '.'])
@@ -93,7 +99,7 @@ function outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_join
         indiv = datablock{ib}*proj_joint_null;
         s_indiv = svd(indiv);
 
-        rI = length(find(s_indiv>threshold(ib)));
+        rI = length(find(s_indiv + ferror >threshold(ib)));
         [i1,i2,i3] = svds(indiv,rI);
         MatrixIndiv{ib} = i1*i2*i3';
         BSSindivLoading{ib} = i1;
