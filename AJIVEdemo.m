@@ -26,7 +26,7 @@ AJIVEPreVisualMJ(datablock);
 disp('Press any key to continue!')
 pause;
 %% try rank
-disp('Show scree plot along with the initial rank choices!')
+disp('Show scree plot along with different initial rank choices!')
 rank{1} = [1 2 10];
 rank{2} = [2 3];
 AJIVEPreVisualMJ(datablock,rank, dataname);
@@ -80,13 +80,12 @@ disp('Visualizing AJIVE outputs!')
 
 Xjoint = outstruct1.MatrixJoint{1};
 Xindiv = outstruct1.MatrixIndiv{1};
-AJIVEdecompVisualMJ(Xjoint, Xindiv)
+AJIVEdecompVisualMJ(Xjoint, Xindiv, dataname{1});
 
 Yjoint = outstruct1.MatrixJoint{2};
 Yindiv = outstruct1.MatrixIndiv{2};
-AJIVEdecompVisualMJ(Yjoint, Yindiv);
-disp('Press any key to continue!')
-pause;
+AJIVEdecompVisualMJ(Yjoint, Yindiv, dataname{2});
+
 
 
 

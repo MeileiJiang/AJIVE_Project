@@ -5,7 +5,7 @@ load ../DataExample/TCGA.mat
 
 %% AJIVE set up
 ioutput = [1, 1, 1, 1, 1, 1, 1, 1, 1];
-iplot = [0 0];
+iplot = [0 1];
 threp = 5;
 paramstruct = struct('iplot', iplot, ...
                      'dataname', {dataname}, ...
@@ -25,16 +25,16 @@ disp('Visualizing the scores of the first joint component among four data block!
 subtypeKey = {'LumA', 'LumB', 'Her2', 'Basal'};
 markerValue = {'+', 'x', '*', '<'};
 colorValue = {[1 0 0], [1 0 1], [0 1 1], [0 0 1]};
-labelcellstr = {{'CNS 1'}};
+labelcellstr = {{'CNS 4-1'}};
 iprint = 1;
 savedir = 'Figures/';
-figname = 'TCGA_CNS1';
+figname = 'TCGA_CNS4_1';
 scorePlot1d(-outstruct.CNS, 1, datasubtype, subtypeKey, markerValue, ...
     colorValue, labelcellstr, iprint, savedir, figname)
 disp('Press any key to continue!')
 pause;
 %% AJIVE analysis: GE - CN - Rppa
-disp('Run AJIVE algorithm over GE, CN and Rppa data blocks with first joint component among four datablocks removed!')
+disp('Run AJIVE algorithm over GE, CN and Rppa data blocks with joint matrices above removed!')
 datablock0 = {outstruct.MatrixIndiv{1} + outstruct.MatrixResid{1}, ...
               outstruct.MatrixIndiv{2} + outstruct.MatrixResid{2}, ...
               outstruct.MatrixIndiv{3} + outstruct.MatrixResid{3}};
@@ -51,27 +51,29 @@ pause;
 
 iprint = 1;
 savedir = 'Figures/';
-disp('Visulizing the scores of the second joint component among the three datablocks!')
-labelcellstr = {{'CNS 2'}};
-figname = 'TCGA_CNS2';
+disp('Visulizing the common normalized scores of first joint component among the three datablocks!')
+labelcellstr = {{'CNS 3-1'}};
+figname = 'TCGA_CNS3_1';
 scorePlot1d(outstruct0.CNS, 1, datasubtype, subtypeKey, markerValue, ...
     colorValue, labelcellstr, iprint, savedir, figname)
 disp('Press any key to continue!')
 pause;
 
-disp('Visulizing the scores of the third joint component among the three datablocks!')
-labelcellstr = {{'CNS 3'}};
+
+%% score analysis: GE - CN - ppa
+disp('Visualizing the common normalized scores of all joint components among the three data blocks!')
+labelcellstr = {{'CNS 3-1'; 'CNS 3-2'; 'CNS 3-3'}};
 figname = 'TCGA_CNS3';
-scorePlot1d(outstruct0.CNS, 2, datasubtype, subtypeKey, markerValue, ...
+scorePlot2d(outstruct0.CNS, datasubtype, subtypeKey, markerValue, ...
     colorValue, labelcellstr, iprint, savedir, figname)
 disp('Press any key to continue!')
 pause;
 
-disp('Visulizing the scores of the fourth joint component among the three datablocks!')
-labelcellstr = {{'CNS 4'}};
+disp('Visualizing the common normalized scores of all four joint components among the orignal three data blocks!')
+CNS = [outstruct.CNS; outstruct0.CNS];
+labelcellstr = {{'CNS 4-1'; 'CNS 3-1'; 'CNS 3-2'; 'CNS 3-3'}};
 figname = 'TCGA_CNS4';
-scorePlot1d(outstruct0.CNS, 3, datasubtype, subtypeKey, markerValue, ...
+scorePlot2d(CNS, datasubtype, subtypeKey, markerValue, ...
     colorValue, labelcellstr, iprint, savedir, figname)
 
-disp('Press any key to continue!')
-pause;
+

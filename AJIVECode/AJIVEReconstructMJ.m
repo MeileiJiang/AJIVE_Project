@@ -82,7 +82,7 @@ function outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_join
     % Joint reconstruction
         % Loadings of Common Normalized Score on each data block 
         CNSloading{ib} = datablock{ib}/row_joint;
-        CNSloading{ib} = CNSloading{ib}./vecnormMJ(CNSloading{ib});
+        CNSloading{ib} = CNSloading{ib}./vec2matSM(vecnormMJ(CNSloading{ib}), size(CNSloading{ib}, 1), 4);
         % Joint Block in each data block
         proj_joint_row = row_joint' * row_joint;
         MatrixJoint{ib} = datablock{ib} * proj_joint_row;

@@ -1,7 +1,8 @@
-function scorePlot1d(scoreMat, numcomp, datasubtype, subtypeKey, markerValue, ...
+function scorePlot2d(scoreMat, datasubtype, subtypeKey, markerValue, ...
     colorValue, labelcellstr, iprint, savedir, figname)
-%scorePlot1d Make 1d score plot with density estimation with samples group
-%by datasubtype
+%scorePlot1d Make 12 score plot for score matrix. This puts 1-d projections
+%on the diagonals. And corresponding pairwise projection scatterplots off
+%of the diagonals.
 %   Inputs:
 %       scoreMat - a d x n score matrix
 %       datasubtype - a n x 1 array of string representing subtype of each
@@ -20,6 +21,8 @@ function scorePlot1d(scoreMat, numcomp, datasubtype, subtypeKey, markerValue, ..
 %   Outputs:
 %       Graphics only.
 %   Assumes path can find personal functions:
+%       scatplotSM.m
+%       projplot2SM.m
 %       projplot1SM.m
 %       axisSM.m
 %       bwsjpiSM.m
@@ -37,6 +40,7 @@ function scorePlot1d(scoreMat, numcomp, datasubtype, subtypeKey, markerValue, ..
 %   Copyright (c) Meilei Jiang
 
     nsample = size(datasubtype, 1);
+    nd = size(scoreMat, 1);
     markerMap = containers.Map(subtypeKey, markerValue);
     colorMap = containers.Map(subtypeKey, colorValue);
 
@@ -52,16 +56,13 @@ function scorePlot1d(scoreMat, numcomp, datasubtype, subtypeKey, markerValue, ..
     for i = 1:length(subtypeKey)
         mlegendcolor(i, :) = colorValue{i};
     end
-        
-    figure;
     paramstruct = struct('icolor',icolorsub, ...
-        'markerstr',markerstr, ...
-        'legendcellstr',legendcellstr, ...
-        'mlegendcolor',mlegendcolor, ...
-        'npcadiradd',0, ...
-        'isubpopkde',1, ...
-        'labelcellstr',labelcellstr) ;
-    projplot1SM(scoreMat(numcomp, :), 1, paramstruct) ; % lumA (pos) - other (neg)
+                         'markerstr',markerstr, ...
+                         'legendcellstr',legendcellstr, ...
+                         'mlegendcolor',mlegendcolor, ...
+                         'isubpopkde',1, ...
+                         'labelcellstr',labelcellstr) ;
+    scatplotSM(scoreMat, eye(nd, nd), paramstruct);
     if iprint == 1
         if nargin < 9
             disp('No savedir is provided. Will save to current folder')
@@ -78,6 +79,4 @@ function scorePlot1d(scoreMat, numcomp, datasubtype, subtypeKey, markerValue, ..
         end
         
     end
-
 end
-
