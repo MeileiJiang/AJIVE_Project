@@ -1,7 +1,7 @@
 % script: AJIVE demo
 clear
 clc
-disp('This is a demostration of applying AJIVE algorithm on the toy dataset in Feng et al. (2017) !')
+disp('This is a demostration of applying AJIVE algorithm on the toy example in Feng et al. (2017) !')
 %% Toy data example 
 load('DataExample/toydata.mat');
 addpath 'AJIVECode/'

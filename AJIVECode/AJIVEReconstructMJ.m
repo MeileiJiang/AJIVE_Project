@@ -38,7 +38,7 @@ function outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_join
     for ib = 1:nb
         JointDirection = datablock{ib} * row_joint';
         % Rows in the joint space basis have sd lower than threshold.
-        LowSdJointRow = find(sqrt(sum(JointDirection.^2, 1)) <= threshold(ib)) + ferror;    
+        LowSdJointRow = find(sqrt(sum(JointDirection.^2, 1)) <= threshold(ib) + ferror );    
         if size(LowSdJointRow) > 0
             if size(LowSdJointRow) == 1
                 disp(['Note: The ' num2order(LowSdJointRow) ' joint space basis vector has low variance in ' dataname{ib} '.'])
