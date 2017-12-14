@@ -1,4 +1,4 @@
-function AJIVEPreVisualMJ(datablock, rank, numcompshow, dataname, ...
+function AJIVEPreVisualMJ(datablock, rank, dataname, numcompshow,  ...
     iprint, figdir) 
 % Visualization of AJIVE Step 1 rank selection
 % Input: datablocks (cellarray) e.g. datablock{i} = genemat (d x n matrix)
@@ -14,9 +14,15 @@ function AJIVEPreVisualMJ(datablock, rank, numcompshow, dataname, ...
 % Output: graphics only 
 
 %    Copyright (c) J. S. Marron, Jan Hannig, Qing Feng, & Meilei Jiang 
-
-
 nb = length(datablock);
+
+if ~exist('dataname', 'var')
+    dataname = cell(1, nb);
+    for ib = 1:nb
+        dataname{ib} = ['datablock' num2str(ib)];
+    end
+end
+
 
 if nargin < 2
    disp('Note: only display scree plots!')
@@ -26,6 +32,7 @@ if nargin < 2
        plot(s,'marker','o', 'linewidth', 1, 'color','blue');
        xlabel('Component Index');
        ylabel('Singluar Value');
+       title(strcat(['Scree Plot: ' dataname{ib}]),'FontSize',14);
    end
    return;
 end

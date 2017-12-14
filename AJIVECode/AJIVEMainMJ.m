@@ -240,7 +240,7 @@ function outstruct = AJIVEMainMJ(datablock, vecr, paramstruct)
         for ib = 1:nb
             rankv{ib} = vecr(ib); 
         end
-        AJIVEPreVisualMJ(datablock, rankv, numcompshow, dataname, iprint(1), figdir);
+        AJIVEPreVisualMJ(datablock, rankv, dataname, numcompshow,  iprint(1), figdir);
     end
 
     % Step 1: Signal Space Initial Extraction 

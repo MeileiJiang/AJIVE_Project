@@ -6,7 +6,7 @@ function HeatmapVisualQF(mdata, dataname)
 
 %    Copyright (c) Qing Feng Jan Hannig & J. S. Marron 2016
 
-if nargin == 1;
+if nargin == 1
     dataname = 'Data'; % set default value if no input
 end
 
