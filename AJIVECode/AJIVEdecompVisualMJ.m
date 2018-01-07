@@ -92,7 +92,7 @@ function AJIVEdecompVisualMJ(joint, individual, dataname, iprint, figdir, fignam
         savestr = strcat(figdir, figname);        
         try
             orient landscape
-            print(fig, '-deps', savestr)
+            print(fig, '-depsc', savestr)
             disp('Save AJIVE decomposition plot successfully!')
         catch
             disp('Fail to save AJIVE decomposition plot!')

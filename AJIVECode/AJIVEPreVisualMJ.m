@@ -107,7 +107,7 @@ for ib = 1:nb
         savestr1_1 = strcat(figdir, figname1_1);        
         try
             orient landscape
-            print(fig1, '-deps', savestr1_1)
+            print(fig1, '-depsc', savestr1_1)
             disp('Save scree plot successfully!')
         catch
             disp('Fail to save scree plot!')
