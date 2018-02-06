@@ -1,7 +1,7 @@
 function angleBound = SVDBoundWedinMJ(datablock, r, nresample, U, S, V)
-% SVDBoundWedinMJ function for estimating the perturbation bound of betwen 
-% SVD of a datablock and its true signal through bootstrap prosedure.
-% This perturbation bound is based Wedin's sin \theta theory (Wedin, 1972)
+% SVDBoundWedinMJ function for estimating the perturbation bound between V 
+% and its true signal through a bootstrap prosedure.
+% This perturbation bound is based on Wedin's sin \theta theory (Wedin, 1972)
 % Inputs:
 %   datablock         - a d x n data matrix 
 %   r                 - selected rank for data matrix
