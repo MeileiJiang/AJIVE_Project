@@ -4,6 +4,7 @@ clc
 disp('This shows the AJIVE analysis on the Mortality dataset!')
 load ../DataExample/mortality.mat
 addpath ../AJIVECode/   
+disp("Marron's Matlab Software should be added to the Matlab search path to reproduce the score plots!")
 
 %% Setting up
 vecr = [3, 2];

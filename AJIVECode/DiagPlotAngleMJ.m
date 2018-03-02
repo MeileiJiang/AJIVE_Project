@@ -41,15 +41,15 @@ function DiagPlotAngleMJ(dataname, vecr, randAngles, pangles, WedinAnglebds, ...
         titletxt = strcat(titletxt, {dataname{i}}, {':'},{num2str(vecr(i))}, {'  '});
     end
     fig = figure;    
-    scatter(sortAngles, ygrid, 2, 'r')
+    scatter(sortAngles, ygrid, 30, 'ro')
     hold on
-    scatter(sortAngleBound, bound_ygrid, 2, 'b')
+    scatter(sortAngleBound, bound_ygrid, 45, 'b+')
     line([nullAngle nullAngle], [0 1], ...
-        'color', 'r', 'LineStyle', '--', 'LineWidth', 2)
+        'color', 'r', 'LineStyle', '-.', 'LineWidth', 1.8)
     line([0 90], [0.05 0.05], ...
         'color', [0.5, 0.5, 0.5], 'LineStyle', '-.')
     line([angleBoundp angleBoundp], [0 1], ...
-     'color', 'b', 'LineStyle', '--', 'LineWidth', 2)
+     'color', 'b', 'LineStyle', '--', 'LineWidth', 1.8)
     if exist('true_WedinAnglebd', 'var')
         line([true_WedinAnglebd true_WedinAnglebd], [0 1], ...
      'color', 'b', 'LineWidth', 2)

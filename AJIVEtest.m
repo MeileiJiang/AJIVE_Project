@@ -9,7 +9,7 @@ function AJIVEtest(itest, data_dir, func_path)
 %                           = 5 % test good rank input
 %                           = 6,7,8,9 % test big rank input
 %                           = 10,11,12 % mean subtraction
-%                           = 13,14,15,16,17,18,19 % test iplot, boundp, threp
+%                           = 13,14,15,16,17,18,19 % test iplot, threp
 %                     Test Initial SVD Code
 %                     itest = 101,102,103,104,105
 %       data_dir    - a directory of input dataset.

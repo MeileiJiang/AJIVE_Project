@@ -2,7 +2,8 @@ clear
 clc
 addpath ../AJIVECode/
 load ../DataExample/TCGA.mat
-
+disp('This shows the AJIVE analysis on the TCGA dataset!')
+disp(" Marron's Matlab Software should be added to the Matlab search path to reproduce the score plots!")
 %% AJIVE set up
 ioutput = [1, 1, 1, 1, 1, 1, 1, 1, 1];
 iplot = [0 1];

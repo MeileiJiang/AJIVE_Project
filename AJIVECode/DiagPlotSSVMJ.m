@@ -44,15 +44,15 @@ function DiagPlotSSVMJ(dataname, vecr, randSSVs, s_M, WedinSSVbds, ...
     end
         
     fig = figure;
-    scatter(sortRandSSVs, ygrid, 2, 'r')
+    scatter(sortRandSSVs, ygrid, 30, 'ro')
     hold on
-    scatter(sortSVbound, bound_ygrid, 2, 'b')
+    scatter(sortSVbound, bound_ygrid, 45, 'b+')
     line([randSSVbd randSSVbd], [0 1], ...
-        'color', 'r', 'LineStyle', '--', 'LineWidth', 2)
+        'color', 'r', 'LineStyle', '-.', 'LineWidth', 1.8)
     line(xlimits, [0.05 0.05], ...
         'color', [0.5, 0.5, 0.5], 'LineStyle', '-.')
     line([WedinSSVbd WedinSSVbd], [0 1], ...
-         'color', 'b', 'LineStyle', '--', 'LineWidth', 2)
+         'color', 'b', 'LineStyle', '--', 'LineWidth', 1.8)
     if exist('true_WedinSSVbd', 'var')
         if true_WedinSSVbd < 1
             true_WedinSSVbd = 1;

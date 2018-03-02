@@ -84,8 +84,7 @@ function outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_join
         CNSloading{ib} = datablock{ib}/row_joint;
         CNSloading{ib} = CNSloading{ib}./vec2matSM(vecnormMJ(CNSloading{ib}), size(CNSloading{ib}, 1), 4);
         % Joint Block in each data block
-        proj_joint_row = row_joint' * row_joint;
-        MatrixJoint{ib} = datablock{ib} * proj_joint_row;
+        MatrixJoint{ib} = datablock{ib} * row_joint' * row_joint;
 
         % Block Specitic Scores
         [t1,t2,t3] = svds(MatrixJoint{ib},rjoint);
@@ -94,9 +93,8 @@ function outstruct = AJIVEReconstructMJ(datablock, threshold, dataname, row_join
 
         %  Individual reconstruction 
         % orthogonal basis od null space of joint
-        proj_joint_null = diag(ones(1, n)) - proj_joint_row;
 
-        indiv = datablock{ib}*proj_joint_null;
+        indiv = datablock{ib}- datablock{ib} * row_joint' * row_joint;
         s_indiv = svd(indiv);
 
         rI = length(find(s_indiv + ferror >threshold(ib)));
