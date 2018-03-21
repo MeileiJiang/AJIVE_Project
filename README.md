@@ -1,7 +1,7 @@
 # AJIVE_Project
 
 This repository provides the AJIVE software in Matlab and all related Matlab scripts to reproduce the results in the paper 
-[**Angle-basied Joint And Individual Variation Explained**](https://arxiv.org/pdf/1704.02060v2.pdf) (Feng et.al., 2017). 
+[**Angle-basied Joint And Individual Variation Explained**](https://arxiv.org/pdf/1704.02060.pdf) (Feng et.al., 2017). 
 
 ## Organization
 
