@@ -1,7 +1,7 @@
 # AJIVE_Project
 
 This repository provides the AJIVE software in Matlab and all related Matlab scripts to reproduce the results in the paper 
-[**Angle-basied Joint And Individual Variation Explained**](https://arxiv.org/pdf/1704.02060.pdf) (Feng et.al., 2017). 
+[**Angle-basied Joint And Individual Variation Explained**](https://arxiv.org/pdf/1704.02060.pdf) (Feng et.al., 2018). 
 
 ## Organization
 
@@ -21,4 +21,4 @@ The script *Mortality/Mortality_AJIVE_Analysis.m* runs our AJIVE analysis of the
 
 ## Help and Support
 
-For questions, issues or feature requests, please reach out to Meilei Jiang: <jiangm@live.unc.edu>
+For questions, issues or feature requests, please reach out to Meilei Jiang: <jiangmeilei@gmail.com>
